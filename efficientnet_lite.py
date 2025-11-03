@@ -53,6 +53,10 @@ DENSE_KERNEL_INITIALIZER = {
     }
 }
 
+def preprocess_input(image):
+    img = tf.cast(image, tf.float32) / 255.0
+    return img
+
 def correct_pad(inputs, kernel_size):
     """Returns a tuple for zero-padding for 2D convolution with downsampling.
     # Arguments
@@ -232,6 +236,8 @@ def efficientnet_lite(width_coefficient,
         return int(tf.math.ceil(tf.cast(depth_coefficient * repeats, tf.float32)))
     
     if input_tensor is None:
+        if input_shape is None:
+            input_shape = (default_size, default_size, 3)
         img_input = tf.keras.layers.Input(shape = input_shape)
     else:
         if not tf.keras.backend.is_keras_tensor(input_tensor):
